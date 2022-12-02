@@ -31,7 +31,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("io.projectreactor:reactor-test")
 
-
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation ("org.postgresql:r2dbc-postgresql:1.0.0.RELEASE")
     runtimeOnly("org.postgresql:postgresql")

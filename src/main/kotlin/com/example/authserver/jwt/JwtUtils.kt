@@ -6,10 +6,8 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import com.example.authserver.properties.JwtProperties
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.springframework.stereotype.Component
 import java.util.*
 
-@Component
 object JwtUtils {
 
     private val log : Logger = LoggerFactory.getLogger(JwtUtils::class.java)
