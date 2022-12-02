@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 class User(
 
     @Id
-    val id : Long,
+    val id : Long? = null,
 
     @Column
     val username : String,
@@ -21,10 +21,9 @@ class User(
     var email : String,
 
     @Column("created_at")
-    val createAt : LocalDateTime,
+    val createAt : LocalDateTime? = null,
 
     @Column("updated_at")
-    var updatedAt : LocalDateTime
-
+    var updatedAt : LocalDateTime? = null
 )
 
