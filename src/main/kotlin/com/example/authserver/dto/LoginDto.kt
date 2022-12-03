@@ -1,7 +1,7 @@
 package com.example.authserver.dto
 
 data class RequestLogin(
-    val username : String,
+    val username : String ?= null,
     val password: String,
     val email:String
 )
