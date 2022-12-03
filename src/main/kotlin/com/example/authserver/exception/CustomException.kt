@@ -5,7 +5,10 @@ sealed class CustomException(
     override val message : String,
 ) : RuntimeException(message)
 
-data class UserExistException(
+data class UserNotFoundException(
     val errorCode: ErrorCode = ErrorCode.EXIST_USER
 ) : CustomException(errorCode.code, errorCode.message)
 
+data class UserPasswordException(
+    val errorCode: ErrorCode = ErrorCode.NOT_MATCH_PASSWORD
+) : CustomException(errorCode.code, errorCode.message)

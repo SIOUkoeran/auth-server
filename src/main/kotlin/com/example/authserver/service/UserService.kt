@@ -8,4 +8,5 @@ import org.springframework.stereotype.Service
 interface UserService {
 
     suspend fun signUp(requestLogin : RequestLogin) : ResponseLogin
+    suspend fun signIn(requestLogin : RequestLogin) : ResponseLogin
 }

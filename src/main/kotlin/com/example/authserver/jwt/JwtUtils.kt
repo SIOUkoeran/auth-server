@@ -12,18 +12,25 @@ object JwtUtils {
 
     private val log : Logger = LoggerFactory.getLogger(JwtUtils::class.java)
 
-    fun createToken(jwtClaim: JwtClaim, jwtProperties: JwtProperties) =
+    fun createToken(jwtClaim: JwtClaim, jwtProperties: JwtProperties, type : String) =
         with(jwtProperties){
+            val expiredTime  = when(type) {
+                "accessToken" -> jwtProperties.expired
+                "refreshToken" -> jwtProperties.refreshExpired
+                else -> jwtProperties.refreshExpired
+            }
             return@with JWT.create()
                 .withIssuer(issuer)
                 .withIssuedAt(Date())
-                .withExpiresAt(Date(Date().time + expired * 100))
+                .withExpiresAt(Date(Date().time + expiredTime * 100))
                 .withSubject(subject)
                 .withClaim("email", jwtClaim.email)
                 .withClaim("userId", jwtClaim.userId)
                 .withClaim("username", jwtClaim.username)
                 .sign(Algorithm.HMAC256(secret))
         }
+
+
 
     fun decodeToken(token : String, secret : String, issuer : String) : DecodedJWT {
         val algorithm = Algorithm.HMAC256(secret)

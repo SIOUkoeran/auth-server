@@ -7,8 +7,8 @@ data class JwtProperties(
     val issuer : String,
     val expired : Long,
     val secret : String,
-    val subject : String
-
+    val subject : String,
+    val refreshExpired : Long,
 ) {
 
 }
