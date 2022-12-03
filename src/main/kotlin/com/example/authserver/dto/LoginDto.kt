@@ -9,5 +9,7 @@ data class RequestLogin(
 data class ResponseLogin(
     val username: String,
     val email : String,
-    val userId : Long
+    val userId : Long,
+    val accessToken : String? = null,
+    val refreshToken : String? = null,
 )
