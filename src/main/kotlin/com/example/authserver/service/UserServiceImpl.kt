@@ -3,7 +3,8 @@ package com.example.authserver.service
 import com.example.authserver.bcrypt.BCryptUtils
 import com.example.authserver.dto.RequestLogin
 import com.example.authserver.dto.ResponseLogin
-import com.example.authserver.exception.UserNotFoundException
+import com.example.authserver.exception.AlreadyExistUserException
+import com.example.authserver.exception.NotFoundUserNameException
 import com.example.authserver.exception.UserPasswordException
 import com.example.authserver.jwt.JwtClaim
 import com.example.authserver.jwt.JwtUtils
@@ -23,12 +24,13 @@ class UserServiceImpl(
 
     override suspend fun signUp(requestLogin: RequestLogin) : ResponseLogin{
         log.info("request sign up")
-        if (userRepository.existsUserByEmail(requestLogin.email)) {
-            throw UserNotFoundException()
+        if (userRepository.findUserByEmail(requestLogin.email) != null) {
+            log.error("already exists : [${requestLogin.email}]")
+            throw AlreadyExistUserException()
         }
         val user = with(requestLogin){
             User (
-                username = username,
+                username = username ?: throw NotFoundUserNameException(),
                 email = email,
                 password =  BCryptUtils.bcrypt(password)
             )
@@ -44,7 +46,7 @@ class UserServiceImpl(
 
     override suspend fun signIn(requestLogin: RequestLogin) : ResponseLogin {
         return with(userRepository.findUserByEmail(requestLogin.email)
-            ?: throw UserNotFoundException()){
+            ?: throw AlreadyExistUserException()){
             log.info("request login userId : [$id]")
             val isVerified = BCryptUtils.verify(requestLogin.password, password)
             if (!isVerified)
