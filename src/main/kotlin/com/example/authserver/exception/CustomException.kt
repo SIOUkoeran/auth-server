@@ -16,3 +16,7 @@ data class UserPasswordException(
 data class NotFoundUserNameException(
     val errorCode: ErrorCode = ErrorCode.NOT_FOUND_USERNAME
 ) : CustomException(errorCode.code, errorCode.message)
+
+data class NotFoundTokenException(
+    val errorCode: ErrorCode = ErrorCode.NOT_FOUND_TOKEN
+) : CustomException(errorCode.code, errorCode.message)

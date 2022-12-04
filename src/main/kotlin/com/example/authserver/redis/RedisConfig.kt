@@ -23,6 +23,14 @@ class RedisConfig(
     }
 
     @Bean
+    fun userRedisTemplate(factory : LettuceConnectionFactory) : ReactiveRedisTemplate<String, UserRedis> {
+        val serializer = Jackson2JsonRedisSerializer(UserRedis::class.java)
+        val builder = RedisSerializationContext.newSerializationContext<String, UserRedis>()
+        val context = builder.value(serializer).build()
+        return ReactiveRedisTemplate(factory, context)
+    }
+
+    @Bean
     fun redisConnectionFactory() : RedisConnectionFactory{
         return LettuceConnectionFactory(redisProperties.host, redisProperties.port)
     }
