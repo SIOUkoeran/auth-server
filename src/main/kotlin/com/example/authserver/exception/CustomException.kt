@@ -20,3 +20,15 @@ data class NotFoundUserNameException(
 data class NotFoundTokenException(
     val errorCode: ErrorCode = ErrorCode.NOT_FOUND_TOKEN
 ) : CustomException(errorCode.code, errorCode.message)
+
+data class InvalidTokenException(
+    val errorCode: ErrorCode = ErrorCode.INVALID_TOKEN
+) : CustomException(errorCode.code, errorCode.message)
+
+data class JWTokenExpiredException(
+    val errorCode : ErrorCode = ErrorCode.EXPIRED_TOKEN
+) : CustomException(errorCode.code, errorCode.message)
+
+data class InvalidVertificationException(
+    override val message : String
+) : CustomException(401, message = message)

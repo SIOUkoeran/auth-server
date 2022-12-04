@@ -10,15 +10,20 @@ import com.example.authserver.jwt.JwtClaim
 import com.example.authserver.jwt.JwtUtils
 import com.example.authserver.model.User
 import com.example.authserver.properties.JwtProperties
+import com.example.authserver.redis.RedisTokenStore
+import com.example.authserver.redis.UserRedis
 import com.example.authserver.repository.UserRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Transactional
 
 @Component
+@Transactional
 class UserServiceImpl(
     private val userRepository: UserRepository,
-    private val jwtProperties: JwtProperties
+    private val jwtProperties: JwtProperties,
+    private val redisTokenStore: RedisTokenStore,
 ) : UserService{
     private val log : Logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
 
@@ -58,6 +63,14 @@ class UserServiceImpl(
             )
             val createToken = JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")
             val refreshToken = JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")
+            redisTokenStore.awaitPush(
+                createToken,
+                UserRedis(
+                    username = username,
+                    id = id,
+                    email = email
+                )
+            )
             log.info("success login user Id : [$id]")
             ResponseLogin(
                 username = jwtClaim.username,
@@ -68,5 +81,14 @@ class UserServiceImpl(
             )
         }
     }
+
+    override suspend fun getToken(token: String): UserRedis {
+        val user = redisTokenStore.awaitGet(token)
+        log.info("request user using token : [${user.id}]")
+        return user
+    }
+
+    suspend fun getUser(id : Long): User =
+        userRepository.findById(id) ?: throw NotFoundUserNameException()
 
 }

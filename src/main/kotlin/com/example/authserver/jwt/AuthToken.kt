@@ -1,4 +1,4 @@
-package com.example.authserver.config
+package com.example.authserver.jwt
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
 @Retention(AnnotationRetention.RUNTIME)

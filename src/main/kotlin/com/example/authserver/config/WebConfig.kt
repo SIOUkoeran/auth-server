@@ -1,5 +1,7 @@
 package com.example.authserver.config
 
+import com.example.authserver.exception.InvalidTokenException
+import com.example.authserver.jwt.AuthToken
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
@@ -35,7 +37,8 @@ class AuthTokenResolver : HandlerMethodArgumentResolver{
     ): Mono<Any> {
         val authHeader = exchange.request.headers["Authorization"]?.first()
         checkNotNull(authHeader)
-
+        if (!authHeader.startsWith("Bearer"))
+            throw InvalidTokenException()
         val token = authHeader.split(" ")[1]
         return token.toMono()
     }
