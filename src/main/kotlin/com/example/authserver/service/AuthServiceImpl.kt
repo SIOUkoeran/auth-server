@@ -1,5 +1,6 @@
 package com.example.authserver.service
 
+import com.example.authserver.exception.InvalidTokenException
 import com.example.authserver.jwt.JwtClaim
 import com.example.authserver.jwt.JwtUtils
 import com.example.authserver.properties.JwtProperties
@@ -23,6 +24,8 @@ class AuthServiceImpl (
 
     override suspend fun refreshToken(token : String) : String = coroutineScope {
         with(jwtProperties) {
+            if (!checkRefreshToken(token))
+                throw InvalidTokenException()
             val claims = JwtUtils.decodeToken(token, issuer = issuer, secret = secret)
                 .claims
             log.info("request for creating access token user Id : [${claims["userId"]!!.asString()}")
@@ -48,6 +51,12 @@ class AuthServiceImpl (
             )
         }
     }
+
+    private suspend fun checkRefreshToken(refreshToken : String) =
+        when(tokenStore.awaitGet(refreshToken)){
+            null -> false
+            else -> true
+        }
 
 
 }

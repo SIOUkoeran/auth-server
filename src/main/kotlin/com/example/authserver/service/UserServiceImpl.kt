@@ -64,7 +64,7 @@ class UserServiceImpl(
             val createToken = JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")
             val refreshToken = JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")
             redisTokenStore.awaitPush(
-                createToken,
+                refreshToken,
                 UserRedis(
                     username = username,
                     id = id,
@@ -83,10 +83,21 @@ class UserServiceImpl(
     }
 
     override suspend fun getToken(token: String): UserRedis {
-        val user = redisTokenStore.awaitGet(token)
+        val user = redisTokenStore.awaitGetOrPut(token)
         log.info("request user using token : [${user.id}]")
         return user
     }
+
+    override suspend fun getUserByToken(accessToken: String): User? {
+        val userId = JwtUtils.decodeToken(
+            accessToken,
+            issuer = jwtProperties.issuer,
+            secret = jwtProperties.secret
+        ).claims["userId"]!!.asLong()
+
+        TODO("유저 레디스 저장소 생성")
+    }
+
 
     suspend fun getUser(id : Long): User =
         userRepository.findById(id) ?: throw NotFoundUserNameException()

@@ -29,11 +29,11 @@ class UserController(
     suspend fun getMeHandler(
         @AuthToken token : String
     ) : Response {
-        val userRedis = userService.getToken(token)
+        val userRedis = userService.getUserByToken(token)
         return Response(
             code = 200,
             message = "response Me",
-            data = userRedis,
+            data = userRedis!!,
         )
     }
 }
