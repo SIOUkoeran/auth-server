@@ -1,5 +1,6 @@
 package com.example.authserver.config
 
+import com.example.authserver.properties.DBProperties
 import io.r2dbc.postgresql.PostgresqlConnectionConfiguration
 import io.r2dbc.postgresql.PostgresqlConnectionFactory
 import io.r2dbc.spi.ConnectionFactory
@@ -13,7 +14,9 @@ import org.springframework.r2dbc.connection.init.ResourceDatabasePopulator
 
 @EnableR2dbcRepositories
 @Configuration
-class PostgresConfig() {
+class PostgresConfig(
+    private val dbProperties: DBProperties
+) {
 
     @Bean
     fun init(connectionFactory: ConnectionFactory) =
@@ -30,11 +33,11 @@ class PostgresConfig() {
     fun connectionFactory() : PostgresqlConnectionFactory{
         return PostgresqlConnectionFactory(
             PostgresqlConnectionConfiguration.builder()
-                .host("127.0.0.1")
-                .database("ce")
-                .username("postgres")
-                .password("1234")
-                .port(5432)
+                .host(dbProperties.host)
+                .database(dbProperties.database)
+                .username(dbProperties.username)
+                .password(dbProperties.password)
+                .port(dbProperties.port)
                 .build()
         )
     }
