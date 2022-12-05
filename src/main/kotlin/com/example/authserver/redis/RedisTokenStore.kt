@@ -27,10 +27,15 @@ class RedisTokenStore(
     suspend fun awaitPush(token: String, user: UserRedis) {
         val operations: ReactiveValueOperations<String, UserRedis> = reactiveRedisTemplate.opsForValue()
         operations.set(token, user).subscribe()
-        reactiveRedisTemplate.expire(token, Duration.ofSeconds(60L)).subscribe()
+        reactiveRedisTemplate.expire(token, Duration.ofMinutes(100L)).subscribe()
     }
 
-    suspend fun awaitGet(token: String): UserRedis {
+    suspend fun awaitGet(token : String) : UserRedis? {
+
+        return reactiveRedisTemplate.opsForValue().getAndAwait(token)
+    }
+
+    suspend fun awaitGetOrPut(token: String): UserRedis {
         return reactiveRedisTemplate.opsForValue().getAndAwait(token)
             ?.let {
                 log.info("user token cache exist")
