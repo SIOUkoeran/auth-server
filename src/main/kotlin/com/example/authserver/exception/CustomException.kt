@@ -29,6 +29,9 @@ data class JWTokenExpiredException(
     val errorCode : ErrorCode = ErrorCode.EXPIRED_TOKEN
 ) : CustomException(errorCode.code, errorCode.message)
 
+data class NotFoundRoleHeaderEXception(
+    val errorCode: ErrorCode = ErrorCode.NOT_FOUND_ROLE
+) : CustomException(errorCode.code, errorCode.message)
 data class InvalidVertificationException(
     override val message : String
 ) : CustomException(401, message = message)
