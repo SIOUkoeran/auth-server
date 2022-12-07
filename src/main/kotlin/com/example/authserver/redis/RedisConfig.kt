@@ -1,13 +1,9 @@
 package com.example.authserver.redis
 
 
-import com.example.authserver.model.User
 import com.example.authserver.properties.RedisProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory
@@ -17,8 +13,6 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.RedisSerializationContext.RedisSerializationContextBuilder
 import org.springframework.data.redis.serializer.StringRedisSerializer
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 
 @Configuration

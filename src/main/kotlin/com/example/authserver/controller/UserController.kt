@@ -1,10 +1,8 @@
 package com.example.authserver.controller
 
-import com.example.authserver.jwt.AuthToken
 import com.example.authserver.dto.RequestLogin
 import com.example.authserver.dto.Response
-import com.example.authserver.dto.ResponseUser
-import com.example.authserver.redis.UserRedisDto
+import com.example.authserver.jwt.AuthToken
 import com.example.authserver.service.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
