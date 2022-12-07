@@ -31,7 +31,6 @@ class RedisTokenStore(
     }
 
     suspend fun awaitGet(token : String) : UserRedis? {
-
         return reactiveRedisTemplate.opsForValue().getAndAwait(token)
     }
 

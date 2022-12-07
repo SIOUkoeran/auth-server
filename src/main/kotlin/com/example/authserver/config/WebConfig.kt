@@ -3,6 +3,7 @@ package com.example.authserver.config
 import com.example.authserver.exception.InvalidTokenException
 import com.example.authserver.jwt.AuthToken
 import com.example.authserver.properties.WebProperties
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.MethodParameter
 import org.springframework.stereotype.Component
@@ -33,16 +34,20 @@ class AuthTokenResolver : HandlerMethodArgumentResolver{
         return parameter.hasParameterAnnotation(AuthToken::class.java)
     }
 
+    private val log = LoggerFactory.getLogger(AuthTokenResolver::class.java)
     override fun resolveArgument(
         parameter: MethodParameter,
         bindingContext: BindingContext,
         exchange: ServerWebExchange
     ): Mono<Any> {
         val authHeader = exchange.request.headers["Authorization"]?.first()
+        log.info("${exchange.request.headers}")
+        log.info(" ok : $authHeader")
         checkNotNull(authHeader)
         if (!authHeader.startsWith("Bearer"))
             throw InvalidTokenException()
         val token = authHeader.split(" ")[1]
+        log.info("resolver pass")
         return token.toMono()
     }
 }

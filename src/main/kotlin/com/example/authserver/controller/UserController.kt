@@ -3,6 +3,8 @@ package com.example.authserver.controller
 import com.example.authserver.jwt.AuthToken
 import com.example.authserver.dto.RequestLogin
 import com.example.authserver.dto.Response
+import com.example.authserver.dto.ResponseUser
+import com.example.authserver.redis.UserRedisDto
 import com.example.authserver.service.UserService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -28,12 +30,12 @@ class UserController(
     @GetMapping("/me")
     suspend fun getMeHandler(
         @AuthToken token : String
-    ) : Response {
-        val userRedis = userService.getUserByToken(token)
+    ): Response {
         return Response(
-            code = 200,
-            message = "response Me",
-            data = userRedis!!,
+            code = 2010,
+            message = "내 정보 불러오기 성공",
+            data = userService.getUserByToken(token)!!
         )
+
     }
 }
