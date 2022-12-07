@@ -11,7 +11,9 @@ import com.example.authserver.jwt.JwtUtils
 import com.example.authserver.model.User
 import com.example.authserver.properties.JwtProperties
 import com.example.authserver.redis.RedisTokenStore
+import com.example.authserver.redis.RedisUserStore
 import com.example.authserver.redis.UserRedis
+import com.example.authserver.redis.UserRedisDto
 import com.example.authserver.repository.UserRepository
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -24,6 +26,7 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val jwtProperties: JwtProperties,
     private val redisTokenStore: RedisTokenStore,
+    private val redisUserStore: RedisUserStore,
 ) : UserService{
     private val log : Logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
 
@@ -88,14 +91,14 @@ class UserServiceImpl(
         return user
     }
 
-    override suspend fun getUserByToken(accessToken: String): User? {
+    override suspend fun getUserByToken(accessToken: String): UserRedisDto? {
         val userId = JwtUtils.decodeToken(
             accessToken,
             issuer = jwtProperties.issuer,
             secret = jwtProperties.secret
-        ).claims["userId"]!!.asLong()
-
-        TODO("유저 레디스 저장소 생성")
+        ).claims["userId"]!!.toString()
+        log.info("request api me : ${userId}")
+        return redisUserStore.getAwaitOrPut(userId)
     }
 
 
