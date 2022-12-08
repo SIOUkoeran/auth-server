@@ -29,7 +29,8 @@ class AuthServiceImpl (
             val jwtClaim = JwtClaim(
                 username = claims["username"]!!.asString(),
                 userId = claims["userId"]!!.asLong(),
-                email = claims["email"]!!.asString()
+                email = claims["email"]!!.asString(),
+                role = claims["role"]!!.asString()
             )
             val userRedis = async {
                 tokenStore.awaitPush(

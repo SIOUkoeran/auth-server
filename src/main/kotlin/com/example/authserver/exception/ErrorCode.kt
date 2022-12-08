@@ -15,5 +15,6 @@ enum class ErrorCode(
     EXPIRED_TOKEN(401, "토큰이 만료되었습니다."),
 
     //header
-    NOT_FOUND_ROLE(404, "헤더에서 role이 발견되지 않았습니다")
+    NOT_FOUND_ROLE(404, "헤더에서 role이 발견되지 않았습니다"),
+    INVALID_ROLE(401, "권한이 없습니다")
 }

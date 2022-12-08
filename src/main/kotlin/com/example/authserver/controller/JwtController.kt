@@ -19,7 +19,7 @@ class JwtController(
     suspend fun createRefreshTokenHandler(
         @AuthToken token : String
     ) = Response(
-            code = 201,
+            code = 2010,
             message = "access token 이 발급되었습니다",
             data = authService.refreshToken(token)
         )

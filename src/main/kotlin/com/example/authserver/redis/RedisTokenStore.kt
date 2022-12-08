@@ -47,6 +47,7 @@ class RedisTokenStore(
                 secret = jwtProperties.secret
             )
             val email = decodeToken.claims["email"]?.asString() ?: throw InvalidTokenException()
+            log.info("email : $email")
             return@run userRepository.findUserByEmail(email)?.let { user ->
                 log.info("user token cache not exist : [${user.id}]")
                 val userRedis = UserRedis(

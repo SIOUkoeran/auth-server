@@ -28,6 +28,9 @@ data class User(
 
     @Column("updated_at")
     @LastModifiedBy
-    var updatedAt : LocalDateTime? = null
+    var updatedAt : LocalDateTime? = null,
+
+    @Column("role")
+    var role : String
 )
 

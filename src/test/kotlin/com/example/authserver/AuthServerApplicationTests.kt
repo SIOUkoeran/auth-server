@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest
 class AuthServerApplicationTests {
 
     @Test
-    fun contextLoads() {
+    internal fun contextLoads() {
     }
 
 }

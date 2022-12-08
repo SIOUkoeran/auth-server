@@ -40,7 +40,8 @@ class UserServiceImpl(
             User (
                 username = username ?: throw NotFoundUserNameException(),
                 email = email,
-                password =  BCryptUtils.bcrypt(password)
+                password =  BCryptUtils.bcrypt(password),
+                role = "USER"
             )
         }
         val save = userRepository.save(user)
@@ -48,7 +49,8 @@ class UserServiceImpl(
         return ResponseLogin(
             userId = save.id!!,
             username = save.username,
-            email = save.email
+            email = save.email,
+            role = save.role
         )
     }
 
@@ -62,7 +64,8 @@ class UserServiceImpl(
             val jwtClaim = JwtClaim(
                 username = username,
                 email = email,
-                userId = id!!
+                userId = id!!,
+                role = role
             )
             val createToken = JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")
             val refreshToken = JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")
@@ -80,7 +83,8 @@ class UserServiceImpl(
                 email = jwtClaim.email,
                 userId = jwtClaim.userId,
                 accessToken = createToken,
-                refreshToken = refreshToken
+                refreshToken = refreshToken,
+                role = role
             )
         }
     }
