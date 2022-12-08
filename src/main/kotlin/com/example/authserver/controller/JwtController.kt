@@ -1,10 +1,7 @@
 package com.example.authserver.controller
 
 import com.example.authserver.dto.Response
-import com.example.authserver.exception.InvalidTokenException
 import com.example.authserver.jwt.AuthToken
-import com.example.authserver.jwt.JwtUtils
-import com.example.authserver.redis.RedisTokenStore
 import com.example.authserver.service.AuthService
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +19,7 @@ class JwtController(
     suspend fun createRefreshTokenHandler(
         @AuthToken token : String
     ) = Response(
-            code = 201,
+            code = 2010,
             message = "access token 이 발급되었습니다",
             data = authService.refreshToken(token)
         )

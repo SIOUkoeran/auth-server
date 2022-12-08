@@ -5,7 +5,6 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedBy
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
-import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDateTime
 
 @Table("users")
@@ -29,6 +28,9 @@ data class User(
 
     @Column("updated_at")
     @LastModifiedBy
-    var updatedAt : LocalDateTime? = null
+    var updatedAt : LocalDateTime? = null,
+
+    @Column("role")
+    var role : String
 )
 

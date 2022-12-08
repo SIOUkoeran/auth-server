@@ -12,4 +12,5 @@ data class ResponseLogin(
     val userId : Long,
     val accessToken : String? = null,
     val refreshToken : String? = null,
+    val role : String
 )
