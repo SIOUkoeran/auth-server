@@ -40,3 +40,15 @@ data class InvalidRoleException(
 data class InvalidVertificationException(
     override val message : String
 ) : CustomException(401, message = message)
+
+data class EmailSendException(
+    val errorCode : ErrorCode = ErrorCode.FAILED_SEND_EMAIL
+) : CustomException(errorCode.code, errorCode.message)
+
+data class NotMatchEmailCodeException(
+    val errorCode: ErrorCode = ErrorCode.NOT_MATCH_EMAILCODE
+) : CustomException(errorCode.code, errorCode.message)
+
+data class AlreadyStateRoleException(
+    val errorCode : ErrorCode = ErrorCode.ALREADY_STATE_ROLE
+) : CustomException(errorCode.code, errorCode.message)

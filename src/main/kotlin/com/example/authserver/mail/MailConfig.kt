@@ -1,6 +1,7 @@
 package com.example.authserver.mail
 
 import com.example.authserver.properties.MAILProperties
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.mail.javamail.JavaMailSender
@@ -12,6 +13,7 @@ class MailConfig(
     private val mailProperties : MAILProperties
 ) {
 
+    private val log = LoggerFactory.getLogger(MailConfig::class.java)
     @Bean
     fun getJavaMailSender() : JavaMailSender{
         val mailSender = JavaMailSenderImpl()
