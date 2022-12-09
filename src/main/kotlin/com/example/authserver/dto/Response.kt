@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class Response(
     val code : Int,
     val message : String,
-    val data : Any,
+    val data : Any? = null,
 )
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
@@ -28,4 +28,8 @@ data class ResponseUser(
     )
 }
 
-
+data class ResponseCheckEmail(
+    val accessToken : String,
+    val refreshToken : String,
+    val userId : Long,
+)

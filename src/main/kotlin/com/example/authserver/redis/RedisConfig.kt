@@ -20,7 +20,16 @@ class RedisConfig(
     private val redisProperties: RedisProperties
 ) {
 
-
+    @Bean(name = ["stringReactiveRedisTemplate"])
+    fun stringReactiveRedisTemplate(factory: LettuceConnectionFactory) : ReactiveRedisTemplate<String, String> {
+        val keySerializer = StringRedisSerializer()
+        val valueSerializer = StringRedisSerializer()
+        val builder: RedisSerializationContextBuilder<String, String> =
+            RedisSerializationContext.newSerializationContext<String, String>(keySerializer)
+        val context: RedisSerializationContext<String, String> =
+            builder.value(valueSerializer).build()
+        return ReactiveRedisTemplate(factory, context)
+    }
     @Bean
     fun reactiveRedisTemplate(factory : LettuceConnectionFactory) : ReactiveRedisTemplate<String, UserRedis> {
         val keySerializer = StringRedisSerializer()

@@ -1,20 +1,20 @@
 package com.example.authserver.service
 
+import com.auth0.jwt.JWT
 import com.example.authserver.bcrypt.BCryptUtils
 import com.example.authserver.dto.RequestLogin
+import com.example.authserver.dto.ResponseCheckEmail
 import com.example.authserver.dto.ResponseLogin
-import com.example.authserver.exception.AlreadyExistUserException
-import com.example.authserver.exception.NotFoundUserNameException
-import com.example.authserver.exception.UserPasswordException
+import com.example.authserver.exception.*
 import com.example.authserver.jwt.JwtClaim
 import com.example.authserver.jwt.JwtUtils
+import com.example.authserver.mail.EmailService
+import com.example.authserver.mail.UniqueCodeGenerator
 import com.example.authserver.model.User
 import com.example.authserver.properties.JwtProperties
-import com.example.authserver.redis.RedisTokenStore
-import com.example.authserver.redis.RedisUserStore
-import com.example.authserver.redis.UserRedis
-import com.example.authserver.redis.UserRedisDto
+import com.example.authserver.redis.*
 import com.example.authserver.repository.UserRepository
+import kotlinx.coroutines.*
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
@@ -38,19 +38,30 @@ class UserServiceImpl(
         }
         val user = with(requestLogin){
             User (
-                username = username ?: throw NotFoundUserNameException(),
+                username = username!!,
                 email = email,
                 password =  BCryptUtils.bcrypt(password),
-                role = "USER"
+                role = "READY"
             )
+
         }
         val save = userRepository.save(user)
-        log.info("request sign up success : [${save.id}]")
-        return ResponseLogin(
-            userId = save.id!!,
+        val tokenList = JwtClaim(
             username = save.username,
             email = save.email,
-            role = save.role
+            role = save.role,
+            userId = save.id!!
+        ).let{
+            createATKAndRTK(jwtClaim = it, jwtProperties)
+        }
+        log.info("request sign up success : [${save.id}]")
+        return ResponseLogin(
+            userId = save.id,
+            username = save.username,
+            email = save.email,
+            role = save.role,
+            accessToken = tokenList[0],
+            refreshToken = tokenList[1]
         )
     }
 
@@ -105,7 +116,35 @@ class UserServiceImpl(
         return redisUserStore.getAwaitOrPut(userId)
     }
 
+    override suspend fun changeRole(email: String, role : String) : ResponseCheckEmail {
+        val user = userRepository.findUserByEmail(email) ?: throw NotFoundUserNameException()
+        if (user.role == role)
+            throw AlreadyStateRoleException()
+        user.role = role
+        userRepository.save(user)
+        val jwtClaim = with(user) {
+            JwtClaim(
+                userId = id!!,
+                username = username,
+                email = email,
+                role = role
+            )
+        }
+        val tokenList = createATKAndRTK(jwtClaim, jwtProperties)
+        redisTokenStore.awaitPush(tokenList[1], UserRedis(user.id!!, user.username, user.email))
+        return ResponseCheckEmail(
+            accessToken = tokenList[0],
+            refreshToken = tokenList[1],
+            userId = user.id
+        )
+    }
 
+    private suspend fun createATKAndRTK(jwtClaim : JwtClaim, jwtProperties: JwtProperties) =
+        coroutineScope {
+            val atk = async { JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken") }
+            val rtk = async { JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken") }
+            listOf(atk.await(), rtk.await())
+        }
     suspend fun getUser(id : Long): User =
         userRepository.findById(id) ?: throw NotFoundUserNameException()
 

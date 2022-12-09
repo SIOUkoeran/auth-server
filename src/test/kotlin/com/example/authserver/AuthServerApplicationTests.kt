@@ -8,6 +8,8 @@ class AuthServerApplicationTests {
 
     @Test
     internal fun contextLoads() {
+        val currentTimeMillis = System.currentTimeMillis()
+        println(currentTimeMillis)
     }
 
 }
