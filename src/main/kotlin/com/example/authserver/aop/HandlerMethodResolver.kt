@@ -1,8 +1,6 @@
 package com.example.authserver.aop
 
-import com.example.authserver.exception.InvalidRoleException
-import com.example.authserver.exception.InvalidTokenException
-import com.example.authserver.exception.NotFoundRoleHeaderException
+import com.example.authserver.exception.*
 import com.example.authserver.jwt.AuthToken
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -72,5 +70,32 @@ class AuthTokenResolver : HandlerMethodArgumentResolver{
         val token = authHeader.split(" ")[1]
         log.info("resolver pass")
         return token.toMono()
+    }
+}
+
+@Component
+class UserInfoResolver: HandlerMethodArgumentResolver{
+    override fun supportsParameter(parameter: MethodParameter): Boolean {
+        return parameter.hasParameterAnnotation(UserInfoChecker::class.java)
+    }
+    private val log = LoggerFactory.getLogger(UserInfoResolver::class.java)
+    override fun resolveArgument(
+        parameter: MethodParameter,
+        bindingContext: BindingContext,
+        exchange: ServerWebExchange
+    ): Mono<Any> {
+        log.info("try to resolve header")
+        val headers = exchange.request.headers
+
+        val role = headers["X-Authorization-role"]?.first() ?: throw NotFoundUserNameException()
+        val email = headers["X-Authorization-email"]?.first() ?: throw NotFoundHeaderEmailException()
+        val userId = headers["X-Authorization-Id"]?.first()?.toLong() ?: throw NotFoundHeaderUserIdException()
+        val userInfo =  UserInfo(
+            role = role,
+            email = email,
+            id = userId
+        )
+        log.info("success $userInfo")
+        return userInfo.toMono()
     }
 }

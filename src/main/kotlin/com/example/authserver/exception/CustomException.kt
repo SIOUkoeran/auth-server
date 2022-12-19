@@ -52,3 +52,11 @@ data class NotMatchEmailCodeException(
 data class AlreadyStateRoleException(
     val errorCode : ErrorCode = ErrorCode.ALREADY_STATE_ROLE
 ) : CustomException(errorCode.code, errorCode.message)
+
+data class NotFoundHeaderEmailException(
+    val errorCode: ErrorCode = ErrorCode.NOT_FOUND_EMAIL_HEADER
+) : CustomException(errorCode.code, errorCode.message)
+
+data class NotFoundHeaderUserIdException(
+    val errorCode: ErrorCode = ErrorCode.NOT_FOUND_UID_HEADER
+) : CustomException(errorCode.code, errorCode.message)

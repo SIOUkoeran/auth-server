@@ -13,6 +13,9 @@ interface UserService {
     suspend fun signUp(requestLogin : RequestLogin) : ResponseLogin
     suspend fun signIn(requestLogin : RequestLogin) : ResponseLogin
     suspend fun getToken(token : String) : UserRedis
-    suspend fun getUserByToken(accessToken : String) : UserRedisDto?
+    suspend fun getUserById(userId : Long) : UserRedisDto?
     suspend fun changeRole(email: String, role: String): ResponseCheckEmail
+    suspend fun findPasswordByEmail(email : String, username : String)
+    suspend fun findUserByEmail(username: String)
+    suspend fun changePassword(email: String, password : String)
 }
