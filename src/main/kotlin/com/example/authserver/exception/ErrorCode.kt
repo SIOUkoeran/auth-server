@@ -17,6 +17,8 @@ enum class ErrorCode(
     //header
     NOT_FOUND_ROLE(4040, "헤더에서 role이 발견되지 않았습니다"),
     INVALID_ROLE(4010, "권한이 없습니다"),
+    NOT_FOUND_EMAIL_HEADER(4040, "헤더에서 email이 발견되지 않았습니다"),
+    NOT_FOUND_UID_HEADER(4040, "헤더에서 id가 발견되지 않았습니다"),
 
     FAILED_SEND_EMAIL(5020, "이메일 전송에 실패했습니다"),
     NOT_MATCH_EMAILCODE(4010, "이메일 코드가 일치하지 않습니다"),

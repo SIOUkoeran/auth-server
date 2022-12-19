@@ -18,8 +18,8 @@ class EmailServiceImpl(
     private val redisEmailCodeStore: RedisEmailCodeStore,
 ) : EmailService{
 
-    private val log = LoggerFactory.getLogger(EmailServiceImpl::class.java
-    )
+    private val log = LoggerFactory.getLogger(EmailServiceImpl::class.java)
+
     override suspend fun sendSimpMessage(to : String, subject : String, text : String) {
         try {
             val message = SimpleMailMessage()

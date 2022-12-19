@@ -2,6 +2,8 @@ package com.example.authserver.controller
 
 import com.example.authserver.aop.ROLEChecker
 import com.example.authserver.aop.RoleCheck
+import com.example.authserver.aop.UserInfo
+import com.example.authserver.aop.UserInfoChecker
 import com.example.authserver.dto.Response
 import com.example.authserver.jwt.AuthToken
 import com.example.authserver.mail.EmailService
@@ -36,8 +38,7 @@ class EmailController(
     }
 
     @PostMapping("/check")
-    suspend fun checkEmailCode(
-        @ROLEChecker("READY") role : String,
+    suspend fun checkEmailCodeHandler(
         @RequestBody requestCode: RequestCode,
         @RequestHeader("X-Authorization-email") email : String
     ) :Response {
@@ -50,6 +51,26 @@ class EmailController(
             data = response
         )
     }
+
+    @PostMapping("/help/check")
+    suspend fun checkFindAccountCodeHandler(
+        @ROLEChecker("USER") role : String,
+        @UserInfoChecker info : UserInfo,
+        @RequestParam("code") code : String,
+    ) : Response {
+        log.info("$code $info")
+        emailsService.checkEmailCodeRedis(
+            email = info.email,
+            code = code
+        )
+        return Response(
+            code = 2000,
+            message = "이메일 변경 코드가 확인되었습니다",
+            data = null
+        )
+    }
+
+
 }
 
 data class RequestEmail(

@@ -1,6 +1,5 @@
 package com.example.authserver.service
 
-import com.auth0.jwt.JWT
 import com.example.authserver.bcrypt.BCryptUtils
 import com.example.authserver.dto.RequestLogin
 import com.example.authserver.dto.ResponseCheckEmail
@@ -8,8 +7,6 @@ import com.example.authserver.dto.ResponseLogin
 import com.example.authserver.exception.*
 import com.example.authserver.jwt.JwtClaim
 import com.example.authserver.jwt.JwtUtils
-import com.example.authserver.mail.EmailService
-import com.example.authserver.mail.UniqueCodeGenerator
 import com.example.authserver.model.User
 import com.example.authserver.properties.JwtProperties
 import com.example.authserver.redis.*
@@ -106,14 +103,9 @@ class UserServiceImpl(
         return user
     }
 
-    override suspend fun getUserByToken(accessToken: String): UserRedisDto? {
-        val userId = JwtUtils.decodeToken(
-            accessToken,
-            issuer = jwtProperties.issuer,
-            secret = jwtProperties.secret
-        ).claims["userId"]!!.toString()
+    override suspend fun getUserById(userId: Long): UserRedisDto? {
         log.info("request api me : ${userId}")
-        return redisUserStore.getAwaitOrPut(userId)
+        return redisUserStore.getAwaitOrPut(userId.toString())
     }
 
     override suspend fun changeRole(email: String, role : String) : ResponseCheckEmail {
@@ -137,6 +129,21 @@ class UserServiceImpl(
             refreshToken = tokenList[1],
             userId = user.id
         )
+    }
+
+    override suspend fun findPasswordByEmail(email: String, username: String) {
+
+    }
+
+    override suspend fun findUserByEmail(email: String) {
+
+    }
+
+    override suspend fun changePassword(email: String, password : String) {
+        val user =
+            userRepository.findUserByEmail(email) ?: throw NotFoundUserNameException()
+        user.password = BCryptUtils.bcrypt(password)
+        userRepository.save(user)
     }
 
     private suspend fun createATKAndRTK(jwtClaim : JwtClaim, jwtProperties: JwtProperties) =
