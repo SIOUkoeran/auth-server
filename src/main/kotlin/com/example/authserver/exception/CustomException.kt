@@ -60,3 +60,7 @@ data class NotFoundHeaderEmailException(
 data class NotFoundHeaderUserIdException(
     val errorCode: ErrorCode = ErrorCode.NOT_FOUND_UID_HEADER
 ) : CustomException(errorCode.code, errorCode.message)
+
+data class NotFoundUserException(
+    val errorCode: ErrorCode = ErrorCode.NOT_FOUND_USER
+) : CustomException(errorCode.code, errorCode.message)

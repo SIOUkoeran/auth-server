@@ -21,3 +21,13 @@ data class RequestPasswordChange(
     @NotNull
     val email : String
 )
+
+/**
+ * admin modify userinfo request data class
+ */
+data class RequestUpdateUser(
+    @NotNull
+    val username : String,
+    @NotNull
+    val role : String
+)

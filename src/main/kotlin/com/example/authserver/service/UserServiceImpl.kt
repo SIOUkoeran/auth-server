@@ -63,8 +63,9 @@ class UserServiceImpl(
     }
 
     override suspend fun signIn(requestLogin: RequestLogin) : ResponseLogin {
+        log.info(requestLogin.email)
         return with(userRepository.findUserByEmail(requestLogin.email)
-            ?: throw AlreadyExistUserException()){
+            ?: throw NotFoundUserException()){
             log.info("request login userId : [$id]")
             val isVerified = BCryptUtils.verify(requestLogin.password, password)
             if (!isVerified)
