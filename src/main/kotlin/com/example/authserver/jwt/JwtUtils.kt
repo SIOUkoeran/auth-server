@@ -8,6 +8,7 @@ import com.auth0.jwt.interfaces.DecodedJWT
 import com.example.authserver.exception.InvalidVertificationException
 import com.example.authserver.exception.JWTokenExpiredException
 import com.example.authserver.properties.JwtProperties
+import kotlinx.coroutines.coroutineScope
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.util.*
@@ -16,9 +17,9 @@ object JwtUtils {
 
     private val log : Logger = LoggerFactory.getLogger(JwtUtils::class.java)
 
-    fun createToken(jwtClaim: JwtClaim, jwtProperties: JwtProperties, type : String) =
-        with(jwtProperties){
-            val expiredTime  = when(type) {
+    suspend fun createToken(jwtClaim: JwtClaim, jwtProperties: JwtProperties, type : String) = coroutineScope {
+        with(jwtProperties) {
+            val expiredTime = when (type) {
                 "accessToken" -> jwtProperties.expired
                 "refreshToken" -> jwtProperties.refreshExpired
                 else -> jwtProperties.refreshExpired
@@ -34,6 +35,7 @@ object JwtUtils {
                 .withClaim("role", jwtClaim.role)
                 .sign(Algorithm.HMAC256(secret))
         }
+    }
 
 
     fun isExpiredToken(token : String, jwtProperties: JwtProperties) : Boolean {

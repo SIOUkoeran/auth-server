@@ -24,12 +24,13 @@ class UserServiceImpl(
     private val jwtProperties: JwtProperties,
     private val redisTokenStore: RedisTokenStore,
     private val redisUserStore: RedisUserStore,
+    private val bCryptUtils: BCryptUtils,
 ) : UserService{
     private val log : Logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
 
     override suspend fun signUp(requestLogin: RequestLogin) : ResponseLogin{
         log.info("request sign up")
-        if (userRepository.findUserByEmail(requestLogin.email) != null) {
+        if (userRepository.findOneByEmail(requestLogin.email) != null) {
             log.error("already exists : [${requestLogin.email}]")
             throw AlreadyExistUserException()
         }
@@ -37,7 +38,7 @@ class UserServiceImpl(
             User (
                 username = username!!,
                 email = email,
-                password =  BCryptUtils.bcrypt(password),
+                password =  bCryptUtils.bcrypt(password),
                 role = "READY"
             )
 
@@ -62,13 +63,11 @@ class UserServiceImpl(
         )
     }
 
-    override suspend fun signIn(requestLogin: RequestLogin) : ResponseLogin {
-        log.info(requestLogin.email)
-        return with(userRepository.findUserByEmail(requestLogin.email)
+    override suspend fun signIn(requestLogin: RequestLogin) : ResponseLogin = coroutineScope{
+        with(userRepository.findOneByEmail(requestLogin.email)
             ?: throw NotFoundUserException()){
-            log.info("request login userId : [$id]")
-            val isVerified = BCryptUtils.verify(requestLogin.password, password)
-            if (!isVerified)
+            val isVerified = async {  bCryptUtils.verify(requestLogin.password, password)}
+            if (!isVerified.await())
                 throw UserPasswordException()
             val jwtClaim = JwtClaim(
                 username = username,
@@ -78,15 +77,16 @@ class UserServiceImpl(
             )
             val createToken = JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")
             val refreshToken = JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")
-            redisTokenStore.awaitPush(
-                refreshToken,
-                UserRedis(
-                    username = username,
-                    id = id,
-                    email = email
+            launch(Dispatchers.IO) {
+                redisTokenStore.awaitPush(
+                    refreshToken,
+                    UserRedis(
+                        username = username,
+                        id = id,
+                        email = email
+                    )
                 )
-            )
-            log.info("success login user Id : [$id]")
+            }
             ResponseLogin(
                 username = jwtClaim.username,
                 email = jwtClaim.email,
@@ -110,7 +110,7 @@ class UserServiceImpl(
     }
 
     override suspend fun changeRole(email: String, role : String) : ResponseCheckEmail {
-        val user = userRepository.findUserByEmail(email) ?: throw NotFoundUserNameException()
+        val user = userRepository.findOneByEmail(email) ?: throw NotFoundUserNameException()
         if (user.role == role)
             throw AlreadyStateRoleException()
         user.role = role
@@ -142,8 +142,8 @@ class UserServiceImpl(
 
     override suspend fun changePassword(email: String, password : String) {
         val user =
-            userRepository.findUserByEmail(email) ?: throw NotFoundUserNameException()
-        user.password = BCryptUtils.bcrypt(password)
+            userRepository.findOneByEmail(email) ?: throw NotFoundUserNameException()
+        user.password = bCryptUtils.bcrypt(password)
         userRepository.save(user)
     }
 
