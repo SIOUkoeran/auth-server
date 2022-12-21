@@ -9,10 +9,10 @@ import com.example.authserver.properties.JwtProperties
 import com.example.authserver.repository.UserRepository
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.ReactiveRedisTemplate
-import org.springframework.data.redis.core.ReactiveValueOperations
 import org.springframework.data.redis.core.getAndAwait
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
+import reactor.core.publisher.Mono
 import java.time.Duration
 
 @Component
@@ -25,9 +25,12 @@ class RedisTokenStore(
 
     private val log = LoggerFactory.getLogger(RedisTokenStore::class.java)
     suspend fun awaitPush(token: String, user: UserRedis) {
-        val operations: ReactiveValueOperations<String, UserRedis> = reactiveRedisTemplate.opsForValue()
-        operations.set(token, user).subscribe()
-        reactiveRedisTemplate.expire(token, Duration.ofMinutes(100L)).subscribe()
+        reactiveRedisTemplate.opsForValue()
+            .set(token, user, Duration.ofMinutes(100L))
+            .subscribe { it ->
+                if (!it)
+                    throw NotFoundTokenException()
+            }
     }
 
     suspend fun awaitGet(token : String) : UserRedis? {
@@ -48,7 +51,7 @@ class RedisTokenStore(
             )
             val email = decodeToken.claims["email"]?.asString() ?: throw InvalidTokenException()
             log.info("email : $email")
-            return@run userRepository.findUserByEmail(email)?.let { user ->
+            return@run userRepository.findOneByEmail(email)?.let { user ->
                 log.info("user token cache not exist : [${user.id}]")
                 val userRedis = UserRedis(
                     id = user.id!!,

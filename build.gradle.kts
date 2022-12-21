@@ -39,9 +39,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation ("org.postgresql:r2dbc-postgresql:1.0.0.RELEASE")
     runtimeOnly("org.postgresql:postgresql")
-
-
-    implementation("at.favre.lib:bcrypt:0.9.0")
+    implementation("de.mkammerer:argon2-jvm:2.11")
 
 }
 

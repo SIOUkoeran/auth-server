@@ -4,7 +4,8 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-
+ngrider-controller/**
+docker-compose.yml
 ### STS ###
 .apt_generated
 .classpath
