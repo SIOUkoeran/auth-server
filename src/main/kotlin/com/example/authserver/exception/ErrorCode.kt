@@ -5,6 +5,7 @@ enum class ErrorCode(
     val message : String
 ) {
     //login
+    NOT_FOUND_USER(4000, "유저가 존재하지않습니다"),
     EXIST_USER(4090, "유저가 존재합니다."),
     NOT_FOUND_USERNAME(4040, "유저 이름이 입력되지 않았습니다"),
     NOT_MATCH_PASSWORD(4000, "패스워드가 일치하지 않습니다."),

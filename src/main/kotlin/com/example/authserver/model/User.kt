@@ -14,7 +14,7 @@ data class User(
     val id : Long? = null,
 
     @Column
-    val username : String,
+    var username : String,
 
     @Column
     var password : String,
