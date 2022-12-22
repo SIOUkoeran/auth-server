@@ -75,11 +75,11 @@ class UserServiceImpl(
                 userId = id!!,
                 role = role
             )
-            val createToken = JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")
-            val refreshToken = JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")
+            val createToken = async{JwtUtils.createToken(jwtClaim, jwtProperties, "accessToken")}
+            val refreshToken = async{JwtUtils.createToken(jwtClaim, jwtProperties, "refreshToken")}
             launch(Dispatchers.IO) {
                 redisTokenStore.awaitPush(
-                    refreshToken,
+                    refreshToken.await(),
                     UserRedis(
                         username = username,
                         id = id,
@@ -91,8 +91,8 @@ class UserServiceImpl(
                 username = jwtClaim.username,
                 email = jwtClaim.email,
                 userId = jwtClaim.userId,
-                accessToken = createToken,
-                refreshToken = refreshToken,
+                accessToken = createToken.await(),
+                refreshToken = refreshToken.await(),
                 role = role
             )
         }

@@ -24,7 +24,7 @@ class WebConfig(
 
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-            .allowedOrigins("*")
+            .allowedOrigins(webProperties.originHost)
             .allowedMethods("GET", "POST", "PUT", "DELETE")
             .maxAge(3600)
     }
