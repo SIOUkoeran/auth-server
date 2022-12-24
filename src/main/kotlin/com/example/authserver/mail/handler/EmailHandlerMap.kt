@@ -1,8 +1,8 @@
-package com.example.authserver.mail
+package com.example.authserver.mail.handler
 
 import com.example.authserver.exception.NotSupportEmailType
+import com.example.authserver.mail.EmailHandler
 import org.springframework.context.ApplicationContext
-import org.springframework.context.support.AbstractApplicationContext
 import org.springframework.stereotype.Component
 import java.util.concurrent.ConcurrentHashMap
 

@@ -1,6 +1,6 @@
 package com.example.authserver.redis
 
-import com.example.authserver.mail.EmailHandlerMap
+import com.example.authserver.mail.handler.EmailHandlerMap
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.slf4j.LoggerFactory

@@ -1,6 +1,9 @@
-package com.example.authserver.mail
+package com.example.authserver.mail.handler
 
 import com.example.authserver.exception.EmailSendException
+import com.example.authserver.mail.EmailDto
+import com.example.authserver.mail.EmailHandler
+import com.example.authserver.mail.RedisEmailCodeStore
 import kotlinx.coroutines.*
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Component
