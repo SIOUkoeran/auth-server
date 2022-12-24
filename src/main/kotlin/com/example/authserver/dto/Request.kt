@@ -18,8 +18,6 @@ data class RequestAccount(
 data class RequestPasswordChange(
     @NotNull
     val password : String,
-    @NotNull
-    val email : String
 )
 
 /**

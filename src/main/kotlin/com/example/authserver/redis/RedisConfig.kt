@@ -1,6 +1,7 @@
 package com.example.authserver.redis
 
 
+import com.example.authserver.mail.EmailDto
 import com.example.authserver.properties.RedisProperties
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -30,6 +31,16 @@ class RedisConfig(
             builder.value(valueSerializer).build()
         return ReactiveRedisTemplate(factory, context)
     }
+
+    @Bean(name = ["mailRedisTemplate"])
+    fun mailRedisTemplate(factory: LettuceConnectionFactory) : ReactiveRedisTemplate<String, EmailDto> {
+        val keySerializer = StringRedisSerializer()
+        val valueSerializer = Jackson2JsonRedisSerializer(EmailDto::class.java)
+        val builder = RedisSerializationContext.newSerializationContext<String, EmailDto>(keySerializer)
+        val context = builder.value(valueSerializer).build()
+        return ReactiveRedisTemplate(factory, context)
+    }
+
     @Bean
     fun reactiveRedisTemplate(factory : LettuceConnectionFactory) : ReactiveRedisTemplate<String, UserRedis> {
         val keySerializer = StringRedisSerializer()
