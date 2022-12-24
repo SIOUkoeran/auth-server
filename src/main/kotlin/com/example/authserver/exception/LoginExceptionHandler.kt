@@ -20,8 +20,6 @@ class LoginExceptionHandler(
     private val log = LoggerFactory.getLogger(LoginExceptionHandler::class.java)
     override fun handle(exchange: ServerWebExchange, ex: Throwable): Mono<Void> = mono{
 
-        log.error ("error : ${ex.message}")
-
         val errorResponse = if (ex is CustomException) {
             ErrorResponse(code = ex.code, message = ex.message)
         } else {

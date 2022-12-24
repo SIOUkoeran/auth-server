@@ -8,6 +8,8 @@ import com.example.authserver.dto.RequestLogin
 import com.example.authserver.dto.RequestPasswordChange
 import com.example.authserver.dto.Response
 import com.example.authserver.jwt.AuthToken
+import com.example.authserver.mail.EmailDto
+import com.example.authserver.mail.EmailHandler
 import com.example.authserver.mail.EmailService
 import com.example.authserver.mail.UniqueCodeGenerator
 import com.example.authserver.service.UserService
@@ -65,11 +67,12 @@ class UserController(
 
     @PostMapping("/help/pw")
     suspend fun changeUserPasswordHandler(
-        @RequestBody request : RequestPasswordChange
+        @RequestBody request : RequestPasswordChange,
+        @UserInfoChecker info : UserInfo
     ) : Response{
         userService.changePassword(
-            email = request.email,
-            password = request.password
+            email = info.email,
+            password = request.password,
         )
         return Response (
             code = 2000,

@@ -2,6 +2,7 @@ package com.example.authserver.mail
 
 import com.example.authserver.exception.EmailSendException
 import com.example.authserver.exception.NotMatchEmailCodeException
+import com.example.authserver.redis.RedisMailService
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -16,6 +17,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class EmailServiceImpl(
     private val emailSender : JavaMailSender,
     private val redisEmailCodeStore: RedisEmailCodeStore,
+    private val redisMailService: RedisMailService,
 ) : EmailService{
 
     private val log = LoggerFactory.getLogger(EmailServiceImpl::class.java)
@@ -51,6 +53,15 @@ class EmailServiceImpl(
 
     override suspend fun sendIsValidEmail(email: String): Unit = coroutineScope {
         val emailCode = UniqueCodeGenerator.generateUniqueCode(System.currentTimeMillis(), email)
+        redisMailService.publish(
+            "MAIL",
+            EmailDto(
+                to = email,
+                subject = "이메일 인증 코드",
+                text = emailCode,
+                type = "VALID"
+            )
+        )
         try{
             val emailSendFlag = async {
                 sendSimpMessage(

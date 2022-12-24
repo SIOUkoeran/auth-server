@@ -21,7 +21,12 @@ enum class ErrorCode(
     NOT_FOUND_EMAIL_HEADER(4040, "헤더에서 email이 발견되지 않았습니다"),
     NOT_FOUND_UID_HEADER(4040, "헤더에서 id가 발견되지 않았습니다"),
 
+    /**
+     * email
+     */
     FAILED_SEND_EMAIL(5020, "이메일 전송에 실패했습니다"),
     NOT_MATCH_EMAILCODE(4010, "이메일 코드가 일치하지 않습니다"),
+    NOT_SUPPORT_EMAIL_TYPE(4090, "지원하지않는 이메일 타입입니다"),
+
     ALREADY_STATE_ROLE(4090, "이미 권한이 중복입니다")
 }

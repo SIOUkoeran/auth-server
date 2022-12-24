@@ -6,7 +6,10 @@ import com.example.authserver.aop.UserInfo
 import com.example.authserver.aop.UserInfoChecker
 import com.example.authserver.dto.Response
 import com.example.authserver.jwt.AuthToken
+import com.example.authserver.mail.EmailDto
 import com.example.authserver.mail.EmailService
+import com.example.authserver.mail.UniqueCodeGenerator
+import com.example.authserver.redis.RedisMailService
 import com.example.authserver.service.UserService
 import org.jetbrains.annotations.NotNull
 import org.slf4j.LoggerFactory
@@ -18,8 +21,9 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/email")
 class EmailController(
-    private val emailsService : EmailService,
-    private val userService: UserService
+    private val emailService : EmailService,
+    private val userService: UserService,
+    private val redisMailService: RedisMailService,
 ) {
 
     private val log = LoggerFactory.getLogger(EmailController::class.java)
@@ -29,7 +33,18 @@ class EmailController(
         @RequestHeader("X-Authorization-email") email : String
     ) : Response{
         log.info("send valid email start : [${email}]")
-        emailsService.sendIsValidEmail(email)
+        redisMailService.publish(
+            "MAIL",
+            EmailDto(
+                to = email,
+                subject = "auth-code",
+                text = UniqueCodeGenerator.generateUniqueCode(
+                    System.currentTimeMillis(),
+                    email
+                ),
+                type = "VALID"
+            )
+        )
         return Response(
             code = 2000,
             message = "이메일 전송 완료되었습니다",
@@ -42,8 +57,7 @@ class EmailController(
         @RequestBody requestCode: RequestCode,
         @RequestHeader("X-Authorization-email") email : String
     ) :Response {
-        log.info("email code valid")
-        emailsService.checkEmailCodeRedis(email, requestCode.code)
+        emailService.checkEmailCodeRedis(email, requestCode.code)
         val response = userService.changeRole(email, "USER")
         return Response(
             code = 2010,
@@ -59,7 +73,7 @@ class EmailController(
         @RequestParam("code") code : String,
     ) : Response {
         log.info("$code $info")
-        emailsService.checkEmailCodeRedis(
+        emailService.checkEmailCodeRedis(
             email = info.email,
             code = code
         )

@@ -1,0 +1,148 @@
+### 회원가입
+POST http://localhost:8080/auth-server/api/user/signup
+Content-Type: application/json
+
+{
+  "email" : "alstnalsgud@gmail.com",
+  "password" : "1234",
+  "username" : "minsu"
+}
+
+<> 2022-12-24T201058.200.json
+
+### 로그인
+POST http://localhost:8080/auth-server/api/user/signin
+Content-Type: application/json
+
+{
+  "email" : "alstnalsgud@gmail.com",
+  "password" : "12345"
+}
+
+<> 2022-12-24T202212.200.json
+<> 2022-12-24T202207.200.json
+<> 2022-12-24T202202.200.json
+<> 2022-12-24T194357.200.json
+<> 2022-12-24T194035.200.json
+<> 2022-12-24T192804.200.json
+<> 2022-12-24T192035.200.json
+<> 2022-12-24T192034.200.json
+<> 2022-12-24T192029.200.json
+<> 2022-12-21T182122.200.json
+<> 2022-12-05T235334.200.json
+<> 2022-11-26T213143.200.json
+<> 2022-11-26T212733.200.json
+<> 2022-11-26T212655.200.json
+<> 2022-11-26T212332.200.json
+<> 2022-11-26T210018.200.json
+
+### 내정보불러오기
+GET http://localhost:8080/auth-server/api/user/me
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlVTRVIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTY3MTg4MDkyOSwiaWF0IjoxNjcxODgwNTY5LCJ1c2VySWQiOjIsImVtYWlsIjoiYWxzdG5hbHNndWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJtaW5zdSJ9.mA3dVzzhLOy0aoQP7PMOdpsJjQjV4kRElX1KGJjHFJQ
+
+<> 2022-12-24T201624.200.json
+<> 2022-12-08T154122.200.json
+
+### access token을 refresh token을 통해 재발급
+POST http://localhost:8080/auth-server/api/jwt/refresh
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IkFETUlOIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE2MTE1MDQsImlhdCI6MTY3MTYwNzkwNCwidXNlcklkIjoxLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQG5hdmVyLmNvbSIsInVzZXJuYW1lIjoiTUlOU1UifQ.0XGkOVcYS5-ehsjIDl64y8dyYyINE91Wz0c-2Wi7-sg
+
+<> 2022-12-21T164921.200.json
+
+### 회원가입 인증코드 이메일 보내기
+POST http://localhost:8080/auth-server/api/email/valid
+Content-Type: application/json
+Authorization:  Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlJFQURZIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE4ODA2MTgsImlhdCI6MTY3MTg4MDI1OCwidXNlcklkIjoyLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoibWluc3UifQ.7xYosdw0DY6hX0Xjxx_Dy-YgnINl68OkEq9m3F3Vt0I
+
+<> 2022-12-24T201547.200.json
+<> 2022-12-24T201239.200.json
+<> 2022-12-24T201118.200.json
+<> 2022-12-24T200558.200.json
+<> 2022-12-24T194458.200.json
+<> 2022-12-24T194408.200.json
+<> 2022-12-24T194045.200.json
+<> 2022-12-24T193059.200.json
+<> 2022-12-24T193012.200.json
+<> 2022-12-24T192942.200.json
+<> 2022-12-24T192849.200.json
+<> 2022-12-24T192814.200.json
+<> 2022-12-24T192759.200.json
+<> 2022-12-24T192621.200.json
+<> 2022-12-24T192150.200.json
+<> 2022-12-24T192049.200.json
+
+### 이메일 인증 코드 확인
+POST http://localhost:8080/auth-server/api/email/check
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlJFQURZIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE4ODA2MTgsImlhdCI6MTY3MTg4MDI1OCwidXNlcklkIjoyLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoibWluc3UifQ.7xYosdw0DY6hX0Xjxx_Dy-YgnINl68OkEq9m3F3Vt0I
+Content-Type: application/json
+
+{
+  "code" : "7834YWxzdG5hbHNndWQ="
+}
+
+<> 2022-12-24T201609.200.json
+<> 2022-12-24T201323.200.json
+<> 2022-12-24T201309.200.json
+<> 2022-12-24T201301.200.json
+
+###
+GET http://localhost:9090/api/user/test
+
+
+/** 1. 비밀번호 찾기 이메일 API
+/** 2. 비밀번호 찾기 이메일 코드 인증 API
+/** 3. 비밀번호 변경 API
+
+### 비밀번호 변경 이메일 보내기
+POST http://localhost:8080/auth-server/api/email/valid
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlVTRVIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTY3MTg4MDkyOSwiaWF0IjoxNjcxODgwNTY5LCJ1c2VySWQiOjIsImVtYWlsIjoiYWxzdG5hbHNndWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJtaW5zdSJ9.mA3dVzzhLOy0aoQP7PMOdpsJjQjV4kRElX1KGJjHFJQ
+
+<> 2022-12-24T201724.200.json
+
+### 비밀번호 변경 이메일 코드 검증
+POST http://localhost:8080/auth-server/api/email/help/check?code=4030YWxzdG5hbHNndWQ=
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlVTRVIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTY3MTg4MDkyOSwiaWF0IjoxNjcxODgwNTY5LCJ1c2VySWQiOjIsImVtYWlsIjoiYWxzdG5hbHNndWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJtaW5zdSJ9.mA3dVzzhLOy0aoQP7PMOdpsJjQjV4kRElX1KGJjHFJQ
+
+<> 2022-12-24T201748.200.json
+<> 2022-12-24T201739.200.json
+
+### 비밀번호 변경 API
+POST http://localhost:8080/auth-server/api/user/help/pw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlVTRVIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTY3MTg4MDkyOSwiaWF0IjoxNjcxODgwNTY5LCJ1c2VySWQiOjIsImVtYWlsIjoiYWxzdG5hbHNndWRAZ21haWwuY29tIiwidXNlcm5hbWUiOiJtaW5zdSJ9.mA3dVzzhLOy0aoQP7PMOdpsJjQjV4kRElX1KGJjHFJQ
+Content-Type: application/json
+
+{
+  "password" : "12345"
+}
+
+<> 2022-12-24T202154.200.json
+
+###
+POST http://localhost:8080/auth-server/api/user/help/pw
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IlVTRVIiLCJpc3MiOiJhdXRoLXNlcnZlciIsImV4cCI6MTY3MTI3Mjk4MiwiaWF0IjoxNjcxMjcyNjIyLCJ1c2VySWQiOjMsImVtYWlsIjoiYWxzdG5hbHNndWRAbmF2ZXIuY29tIiwidXNlcm5hbWUiOiJtaW5zdSJ9.DwzUm4w6z8RD8ketItq5kwgUbEA8QN5Ul-vEVhCRWrk
+Content-Type: application/json
+
+{
+  "password": "12345",
+  "email" : "alstnalsgud@naver.com"
+}
+
+### admin api
+GET http://localhost:8080/auth-server/api/admin/users?page=1&pageSize=5
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IkFETUlOIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE2MDgyNjQsImlhdCI6MTY3MTYwNzkwNCwidXNlcklkIjoxLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQG5hdmVyLmNvbSIsInVzZXJuYW1lIjoiTUlOU1UifQ.vyiBFxhXi_LQB5606RfGc9KcRlf0iZm27CLTOx7fW_U
+
+### admin api - modify user
+PUT http://localhost:8080/auth-server/api/admin/user?userId=2
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IkFETUlOIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE2MDgyNjQsImlhdCI6MTY3MTYwNzkwNCwidXNlcklkIjoxLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQG5hdmVyLmNvbSIsInVzZXJuYW1lIjoiTUlOU1UifQ.vyiBFxhXi_LQB5606RfGc9KcRlf0iZm27CLTOx7fW_U
+Content-Type: application/json
+
+{
+  "username": "modified",
+  "role" : "USER"
+}
+
+### admin api - delete user
+DELETE http://localhost:8080/auth-server/api/admin/user?userId=2
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhdXRoIiwicm9sZSI6IkFETUlOIiwiaXNzIjoiYXV0aC1zZXJ2ZXIiLCJleHAiOjE2NzE2MDkzMjEsImlhdCI6MTY3MTYwODk2MSwidXNlcklkIjoxLCJlbWFpbCI6ImFsc3RuYWxzZ3VkQG5hdmVyLmNvbSIsInVzZXJuYW1lIjoiTUlOU1UifQ.QJzAJq1hH4VT5375e2jkWTyRpC3E-pIjZUCSZrUR3I8
+
+<> 2022-12-21T164934.200.json
