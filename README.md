@@ -1,5 +1,7 @@
 # auth-server
 
+`generated-request.http`
+파일에서 각 기능 API 명시했습니다.
 
 - API GATEWAY -> auth-server
 </br> 1. auth-server 에서는 API-GATEWAY 주소만 허용
